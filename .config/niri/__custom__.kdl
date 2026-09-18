@@ -18,6 +18,9 @@ spawn-at-startup "~/.local/bin/mpris-inhibit.sh"
 spawn-at-startup "~/.local/bin/gamepad-keepawake.sh"
 spawn-at-startup "~/.local/bin/qq-wayland-clipboard.sh"
 
+// dotfiles 自动同步：监听家目录配置变化并提交推送到 ~/dotfiles
+spawn-at-startup "~/.local/bin/dotfiles-sync.sh" "--daemon"
+
 cursor {
     xcursor-theme "macOS"
     xcursor-size 30
