@@ -2,14 +2,14 @@
 # dotfiles-sync — one-way auto-sync: live system ($HOME, /etc) -> ~/dotfiles (git repo)
 #
 # Usage:
-#   dotfiles-sync.sh --daemon     run persistent watcher (started via niri spawn-at-startup)
 #   dotfiles-sync.sh --sync-now   one-shot sync + commit + push
+#                     (started via niri spawn-at-startup, runs once per login)
 #
 # Rules:
 #   - ALWAYS edit the HOME copy (system folders). The repo is a read-only mirror;
 #     anything edited directly in the repo gets overwritten by the next sync.
 #   - Full-sync trees (rsync, deletions propagate): .config/niri .config/fish
-#     .config/noctalia .config/fastfetch .local/share/applications .local/share/icons
+#     .config/noctalia .config/fastfetch .local/share/applications .local/share/icons .local/share/icons
 #   - Whitelist mode (git-tracked files only): .local/bin (deletions propagate),
 #     /etc/udev/rules.d (never auto-delete repo copies)
 #   - Excluded from sync: niri effects.kdl (eyecare mode-pointer symlink),
@@ -20,7 +20,6 @@ REPO="$HOME/dotfiles"
 STATE_DIR="$HOME/.local/share/dotfiles-sync"
 LOG="$STATE_DIR/sync.log"
 LOCK="$STATE_DIR/lock"
-QUIET_SECS=10
 
 FULL_DIRS=(.config/niri .config/fish .config/noctalia .config/fastfetch .local/share/applications .local/share/icons)
 SINGLE_FILES=(.config/starship.toml)
@@ -107,41 +106,13 @@ do_sync() {
     commit_and_push
 }
 
-daemon() {
-    mkdir -p "$STATE_DIR"
-    exec 9>"$LOCK"
-    flock -n 9 || { echo "dotfiles-sync: another instance is running"; exit 0; }
-    exec >>"$LOG" 2>&1
-    log "daemon started (pid $$)"
-    do_sync
-    local -a watch=()
-    local p
-    for p in "$HOME/.config/niri" "$HOME/.config/fish" "$HOME/.config/noctalia" \
-             "$HOME/.config/fastfetch" "$HOME/.local/share/applications" \
-             "$HOME/.local/share/icons" \
-             "$HOME/.config/starship.toml" /etc/udev/rules.d "$HOME/.local/bin"; do
-        if [ -e "$p" ]; then watch+=("$p"); else log "watch skipped (missing): $p"; fi
-    done
-    while true; do
-        # shellcheck disable=SC2162
-        inotifywait -m -r -e modify,attrib,create,delete,move --format '%w%f' "${watch[@]}" 2>/dev/null \
-        | while read _ev; do
-            while read -r -t "$QUIET_SECS" _drain; do :; done
-            log "change detected, syncing"
-            do_sync
-        done
-        log "watcher exited, restarting in 5s"
-        sleep 5
-    done
-}
-
 case "${1:---help}" in
-    --daemon)   daemon ;;
     --sync-now)
         mkdir -p "$STATE_DIR"
         exec 9>"$LOCK"
-        flock -n 9 || { echo "dotfiles-sync: daemon already running, it will pick up changes"; exit 0; }
+        flock -n 9 || { echo "dotfiles-sync: another instance is running"; exit 0; }
+        log "sync started (pid $$)"
         do_sync
         ;;
-    *) echo "usage: $0 [--daemon|--sync-now]"; exit 1 ;;
+    *) echo "usage: $0 --sync-now"; exit 1 ;;
 esac
