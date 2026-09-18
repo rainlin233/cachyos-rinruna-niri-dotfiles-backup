@@ -38,18 +38,35 @@ binds {
     Ctrl+Alt+Left  { spawn "playerctl" "previous"; }
 }
 
+// Open Orpheus 右键菜单：独立顶层窗口，强制悬浮 + 限尺寸 + 去装饰
 window-rule {
-    match title=r"(?i)Open Orpheus Menu"
+    match app-id="open-orpheus" title=r"(?i)Open Orpheus Menu"
 
     // 1. 开启悬浮
     open-floating true
 
-    // 2. 限制尺寸（解决空白的核心配置）
-    min-width 100
-    max-width 220
-    min-height 50
-    max-height 350
-    draw-border-with-background false
+    // 2. 去掉边框和焦点环（菜单不需要窗口 chrome）
+    border {
+        off
+    }
+    focus-ring {
+        off
+    }
 }
+
+window-rule {
+  match title="^Open Orpheus Lyrics$"
+
+  open-floating true
+
+  focus-ring {
+    off
+  }
+
+  border {
+    off
+  }
+}
+
 
 
