@@ -8,11 +8,14 @@ Name=HMCL
 # 鼠标悬停时显示的提示文本（可选）
 Comment=Hello Minecraft! Launcher
 
-# 启动命令（脚本在 $PATH 中，直接写名字即可；选最新版逻辑在脚本内部）
-Exec=hmcl-launcher %U
+# 启动命令（如果不在 $PATH 中，建议填写完整绝对路径）
+Exec=sh -c 'latest=$(ls -1 /home/rinneko/games/Minecraft/HMCL-*.sh | sort -V | tail -n 1) && [ -n "$latest" ] && exec sh "$latest" "$@"' -- %U
 
-# 指定应用程序图标（图标主题中的名称，无需写路径）
-Icon=hmcl
+# 启动目录（可选，程序运行时的当前工作目录）
+Path=/home/rinneko/games/Minecraft
+
+# 指定应用程序图标（支持图标名称或绝对路径）
+Icon=/home/rinneko/games/Minecraft/hmcl.png
 
 # 是否在终端窗口中运行（GUI 程序填 false，CLI 命令行程序填 true）
 Terminal=false
