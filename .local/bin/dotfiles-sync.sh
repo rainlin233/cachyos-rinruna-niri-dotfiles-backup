@@ -2,7 +2,7 @@
 # dotfiles-sync — one-way auto-sync: live system ($HOME, /etc) -> ~/dotfiles (git repo)
 #
 # Usage:
-#   dotfiles-sync.sh --sync-now   one-shot sync + commit + push
+#   dotfiles-sync.sh          one-shot sync + commit + push (default action)
 #                     (started via niri spawn-at-startup, runs once per login)
 #
 # Rules:
@@ -106,13 +106,13 @@ do_sync() {
     commit_and_push
 }
 
-case "${1:---help}" in
-    --sync-now)
-        mkdir -p "$STATE_DIR"
-        exec 9>"$LOCK"
-        flock -n 9 || { echo "dotfiles-sync: another instance is running"; exit 0; }
-        log "sync started (pid $$)"
-        do_sync
-        ;;
-    *) echo "usage: $0 --sync-now"; exit 1 ;;
+case "${1:-}" in
+    -h|--help) echo "usage: $0 [-h|--help]"; exit 0 ;;
+    ""|--sync-now) : ;;
+    *) echo "unknown argument: $1" >&2; exit 1 ;;
 esac
+mkdir -p "$STATE_DIR"
+exec 9>"$LOCK"
+flock -n 9 || { echo "dotfiles-sync: another instance is running"; exit 0; }
+log "sync started (pid $$)"
+do_sync
