@@ -1,0 +1,52 @@
+// NyxNiri Custom Configuration
+// 
+// Any modifications in this file will be safely preserved during system updates.
+// You can put your personal configuration habits here, for example:
+// 
+// 任何在此文件中的修改都会在系统更新时被安全保留。
+// 你可以把针对你个人习惯的配置写在这里，例如：
+// 
+spawn-at-startup "fcitx5" "-d"
+// spawn-at-startup "easyeffects" "--gapplication-service"
+// 
+// window-rule {
+//     match app-id="my-custom-app"
+//     open-floating true
+// }
+spawn-at-startup "xembedsniproxy"
+spawn-at-startup "~/.local/bin/mpris-inhibit.sh"
+spawn-at-startup "~/.local/bin/gamepad-keepawake.sh"
+spawn-at-startup "~/.local/bin/qq-wayland-clipboard.sh"
+
+cursor {
+    xcursor-theme "macOS"
+    xcursor-size 30
+}
+
+binds {
+    Mod+Ctrl+Z  { move-column-left-or-to-monitor-left; }
+    Mod+Ctrl+C  { move-column-right-or-to-monitor-right; }
+    
+    XF86AudioPlay  { spawn "playerctl" "play-pause"; }
+    XF86AudioNext  { spawn "playerctl" "next"; }
+    XF86AudioPrev  { spawn "playerctl" "previous"; }
+    Ctrl+Alt+P     { spawn "playerctl" "play-pause"; }
+    Ctrl+Alt+Right { spawn "playerctl" "next"; }
+    Ctrl+Alt+Left  { spawn "playerctl" "previous"; }
+}
+
+window-rule {
+    match title=r"(?i)Open Orpheus Menu"
+
+    // 1. 开启悬浮
+    open-floating true
+
+    // 2. 限制尺寸（解决空白的核心配置）
+    min-width 100
+    max-width 220
+    min-height 50
+    max-height 350
+    draw-border-with-background false
+}
+
+

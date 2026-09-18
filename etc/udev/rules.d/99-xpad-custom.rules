@@ -1,0 +1,1 @@
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="e2b7", ATTR{idProduct}=="122c", RUN+="/sbin/modprobe xpad", RUN+="/bin/sh -c 'echo 0xe2b7 0x122c > /sys/bus/usb/drivers/xpad/new_id'"

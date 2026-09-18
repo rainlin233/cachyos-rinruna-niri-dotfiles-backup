@@ -1,0 +1,331 @@
+layer-rule {
+    match namespace="^noctalia-wallpaper*"
+    place-within-backdrop true
+}
+
+layer-rule {
+    match namespace="^mpvpaper$"
+    place-within-backdrop true
+}
+
+// noctalia(v5.0.0) 状态栏的命名空间
+layer-rule {
+    match namespace="^noctalia-bar-bar$"
+    opacity 1.0
+    geometry-corner-radius 0
+    shadow { off; }
+    background-effect {
+        blur false
+    }
+}
+
+// ==========================================
+// 特定应用规则
+// ==========================================
+
+window-rule {
+    match app-id=r"dev.noctalia.Noctalia"
+    open-floating true
+}
+
+window-rule {
+    match app-id=r"^org\.wezfurlong\.wezterm$"
+    default-column-width
+}
+
+window-rule {
+    match app-id=r"^gnome-control-center$"
+    match app-id=r"^pavucontrol$"
+    match app-id=r"^nm-connection-editor$"
+    default-column-width { proportion 0.5; }
+    open-floating false
+}
+
+window-rule {
+    match app-id=r"^org\.gnome\.Calculator$"
+    match app-id=r"^gnome-calculator$"
+    match app-id=r"^galculator$"
+    match app-id=r"^blueman-manager$"
+    match app-id=r"^org\.gnome\.Nautilus$"
+    match app-id=r"^xdg-desktop-portal-(gnome|gtk)$"
+    open-floating true
+}
+
+window-rule {
+    match app-id=r"^steam$" title=r"^notificationtoasts_\d+_desktop$"
+    default-floating-position x=10 y=10 relative-to="bottom-right"
+    open-focused false
+}
+
+window-rule {
+    match app-id="zoom"
+    open-floating true
+}
+
+window-rule {
+    match app-id="wine"
+    open-floating true
+    default-column-width { proportion 1.0; }
+    draw-border-with-background false
+}
+
+// Wine / Proton / Windows 占位与系统托盘窗口规避 (防止 explorer.exe 托盘在屏幕中央显示 160x20 / 166x52 小黑条/占位横幅)
+window-rule {
+    match app-id=r"(?i)^explorer\.exe$" title=r"^$"
+    match app-id=r"(?i)^explorer\.exe$" title=r"(?i)^Wine System Tray$"
+    match app-id=r"(?i)^explorer\.exe$" title=r"^Wine$"
+    match app-id=r"(?i)^(wineboot|services)\.exe$"
+    match title=r"(?i)^Wine System Tray$"
+    open-floating true
+    open-focused false
+    opacity 0.0
+    default-floating-position x=-9999 y=-9999
+    shadow { off; }
+}
+
+// 从 glassy-niri 复制的特定应用美化规则（纯 blur，无 xray）
+window-rule {
+    match app-id="org.pwmt.zathura"
+    opacity 0.8
+    background-effect { blur true; }
+}
+
+window-rule {
+    match app-id="codium"
+    opacity 0.85
+    background-effect { blur true; }
+}
+
+window-rule {
+    match app-id="steam"
+    opacity 0.9
+    background-effect { blur true; }
+}
+
+window-rule {
+    match app-id="obsidian"
+    opacity 0.9
+    background-effect { blur true; }
+}
+
+// Zen 浏览器
+window-rule {
+    match app-id="app.zen_browser.zen"
+    draw-border-with-background false
+    background-effect { blur true; }
+}
+
+// ==========================================
+// Web 浏览器按需 VRR 支持 (防撕裂与高刷平滑)
+// ==========================================
+window-rule {
+    match app-id=r#"^(firefox.*|org\.mozilla\.firefox)$"#
+    match app-id=r#"^(google-chrome.*|chrome|chromium.*|com\.google\.Chrome|org\.chromium\.Chromium)$"#
+    match app-id=r#"^(brave.*|com\.brave\.Browser|microsoft-edge.*|edge|com\.microsoft\.Edge)$"#
+    match app-id=r#"^(zen.*|app\.zen_browser\.zen)$"#
+    match app-id=r#"^(vivaldi.*|opera.*|thorium.*|floorp.*|waterfox.*|librewolf.*)$"#
+    match app-id=r#"^(org\.gnome\.Epiphany.*|epiphany|falkon.*|nyxt.*|qutebrowser.*|ladybird.*|midori.*|tor-browser.*)$"#
+
+    variable-refresh-rate true
+}
+
+
+window-rule {
+    match app-id=r"^org\.gnome\.Nautilus$"
+    draw-border-with-background false
+    background-effect { blur true; }
+}
+
+// =============================================================================
+// 游戏与模拟器视口超级规则组 (Gaming & VRR Master Rules)
+// 设计目标：最大化游戏吞吐覆盖与绝对零浏览器误伤体系
+// =============================================================================
+window-rule {
+    // -------------------------------------------------------------------------
+    // 匹配分支 A: Valve 体系 (Steam 原生/Proton 游戏容器与 Gamescope 嵌套微合成器)
+    // -------------------------------------------------------------------------
+    match app-id=r"^steam_app_.*"
+    match app-id=r#"^(gamescope|com\.valvesoftware\.Steam\.Utility\.gamescope)$"#
+
+    // -------------------------------------------------------------------------
+    // 匹配分支 B: 主流控制台与街机模拟器全系视口 (Native 与 Flatpak)
+    // 涵盖索尼全系、任天堂全系、微软 Xbox、RetroArch 等全系列独立运行视口
+    // -------------------------------------------------------------------------
+    match app-id=r#"^org\.(duckstation\.DuckStation|ppsspp\.PPSSPP|libretro\.RetroArch|DolphinEmu\.dolphin-emu|citra_emu\.citra|azahar_emu\.Azahar|desmume\.DeSmuME|wesnoth\.Wesnoth)$"#
+    match app-id=r#"^net\.(pcsx2\.PCSX2|rpcs3\.RPCS3|shadps4\.shadPS4|kuribo64\.melonDS|veloren\.veloren)$"#
+    match app-id=r#"^io\.(mgba\.mGBA|openrct2\.OpenRCT2|anuke\.Mindustry)$"#
+    match app-id=r#"^io\.github\.(simple64\.simple64|lime3ds\.Lime3DS|ryubing\.Ryujinx|streetpea\.Chiaki4deck)$"#
+    match app-id=r#"^(info\.cemu\.Cemu|app\.xemu\.xemu|com\.fightcade\.Fightcade2|com\.mamedev\.MAME|com\.wildfiregames\.0ad|dev\.goats\.xivlauncher|com\.github\.Anuken\.Mindustry|org\.openmw\.OpenMW|org\.openttd\.OpenTTD|org\.cataclysmdda\.CataclysmDDA)$"#
+    match app-id=r#"^(duckstation-(qt|nogui)|pcsx2(-qt)?|rpcs3|shadps4|PPSSPP(Qt|SDL)|Vita3K|Ryujinx|suyu|sudachi|torzu|yuzu|cemu|dolphin-emu|lime3ds|citra(-qt)?|melonDS|mgba(-qt)?|simple64-gui|RMG|xemu|retroarch|mame|ggpofba|fbneo|snes9x)$"#
+
+    // -------------------------------------------------------------------------
+    // 匹配分支 C: 大型在线长线运营与竞技网游 (MMO / MOBA / FPS)
+    // 涵盖米哈游、库洛、鹰角、暴雪、拳头、V社及跨平台主流 3D 渲染客户端
+    // -------------------------------------------------------------------------
+    match app-id=r#"^((genshinimpact|yuanshen|starrail|zenlesszonezero|client-win64-shipping|wuthering waves|endfield|ffxiv_dx11|ffxiv|wow|wowclassic|league of legends|pathofexile|pathofexile_x64|pathofexile2|warframe\.x64|r5apex|overwatch|marvelrivals|deadlock|project8)\.exe)$"#
+    match app-id=r#"^(cs2|dota2)$"#
+    match app-id=r"^wine$"
+
+    // -------------------------------------------------------------------------
+    // 匹配分支 D: 经典独立神作、P 社五萌战略游戏、开源重制引擎与核心视口
+    // -------------------------------------------------------------------------
+    match app-id=r#"^(net-minecraft-client-main-Main|Minecraft.*|factorio|RimWorldLinux|Terraria\.bin\.x86_64|StardewValley\.bin\.x86_64|Hollow_Knight\.x86_64|deadcells|Celeste|victoria3|hoi4|ck3|stellaris|eu4|openmw|openra-(ra|cnc|d2k)|openrct2|openttd|spring|Beyond-All-Reason|mindustry|pyrogenesis|veloren-voxygen|cataclysm-tiles|wesnoth)$"#
+    match app-id=r#"^((RimWorldWin64|Balatro|noita|noita_dev|Hades|Hades2|xenia|xenia_canary|Cemu)\.exe)$"#
+
+    // -------------------------------------------------------------------------
+    // 匹配分支 E: 云游戏与局域网超低延迟串流视口
+    // -------------------------------------------------------------------------
+    match app-id=r#"^(com\.moonlight_stream\.Moonlight|moonlight|chiaki|chiaki-ng|com\.parsecgaming\.parsec|parsecd)$"#
+
+    // -------------------------------------------------------------------------
+    // 匹配分支 F: 动态标题精准补充（针对异步重命名窗口及 Minecraft Java 视口）
+    // -------------------------------------------------------------------------
+    match title=r#"^Minecraft [0-9]+\.[0-9]+(\.[0-9]+)?.*$"#
+    match title=r#"^Steam Big Picture Mode$"#
+    match title=r#"(?i)genshin impact|zenless zone zero|honkai: star rail|wuthering waves|minecraft|victoria 3|endfield"#
+
+    // =========================================================================
+    // 绝对安全隔离防线 (MANDATORY EXCLUSIONS)
+    // 只要命中以下任一应用，立即熔断规则，绝对禁止开启 VRR 与绕过合成
+    // =========================================================================
+
+    // 1. 全系 Web 浏览器及其派生版本隔离（杜绝 1~2Hz 光标刷新率震荡、面板频闪与视频失去半透明）
+    exclude app-id=r#"^(firefox.*|org\.mozilla\.firefox)$"#
+    exclude app-id=r#"^(google-chrome.*|chrome|chromium.*|com\.google\.Chrome|org\.chromium\.Chromium)$"#
+    exclude app-id=r#"^(brave.*|com\.brave\.Browser|microsoft-edge.*|edge|com\.microsoft\.Edge)$"#
+    exclude app-id=r#"^(zen.*|app\.zen_browser\.zen)$"#
+    exclude app-id=r#"^(vivaldi.*|opera.*|thorium.*|floorp.*|waterfox.*|librewolf.*)$"#
+    exclude app-id=r#"^(org\.gnome\.Epiphany.*|epiphany|falkon.*|nyxt.*|qutebrowser.*|ladybird.*|midori.*|tor-browser.*)$"#
+
+    // 2. Wine/Proton 常见日常与办公工具（严禁泛匹配 .exe 造成的静默误伤）
+    exclude app-id=r#"^(WeChat|QQ|wps|wpscloudsvr|notepad|winword|excel|powerpnt|dingtalk|AliWangWang|Foxmail|Feishu)\.exe$"#
+
+    // 3. 游戏启动器/更新器壳体（防止 Electron/CEF/Qt 管理界面意外触发游戏规则）
+    exclude app-id=r#"^(heroic|lutris|com\.usebottles\.bottles|org\.prismlauncher\.PrismLauncher|com\.lunarclient\.LunarClient)$"#
+    exclude app-id=r#"^(openmw-launcher|dowser\.exe|Battle\.net\.exe|LeagueClientUx\.exe)$"#
+
+    // -------------------------------------------------------------------------
+    // 执行属性设定 (Execution Directives)
+    // -------------------------------------------------------------------------
+    // 激活底层 DRM 的可变刷新率支持 (仅在 output 设置 on-demand=true 时生效)
+    variable-refresh-rate true
+
+    // 强制不透明度为 1.0，关闭半透明与背景模糊计算开销，释放显存带宽
+    opacity 1.0
+    background-effect {
+        blur false
+    }
+
+    // 消除窗口几何圆角切割计算，直接将原生矩形缓冲区送入直通扫描 (Direct Scanout)
+    geometry-corner-radius 0
+    clip-to-geometry false
+
+    // 彻底剥离合成器阴影与边框计算管线
+    draw-border-with-background false
+    shadow {
+        off
+    }
+}
+
+// 视频画中画：所有画中画全工作区悬浮（Mod+拖拽可移动）
+window-rule {
+    match title=r"(画中画|Picture-in-Picture)"
+    open-floating true
+    opacity 1.0
+    default-column-width
+    default-window-height
+    default-floating-position x=20 y=20 relative-to="bottom-right"
+}
+
+// 视频软件适配
+window-rule {
+    match app-id="org.kde.kdenlive"
+    match app-id="mpv"
+    match app-id="kazumi"
+    match app-id="celluloid"
+    match app-id="virt-manager"
+    opacity 1.0
+}
+
+// 图片/视频查看器（中英文标题 + app-id 双保险）
+window-rule {
+    match title=r"(图片查看器|Image Viewer|图片和视频|Image and Video Viewer|视频播放器|Video Player|Videos)"
+    match app-id="org.gnome.Loupe"
+    match app-id="org.gnome.Totem"
+    match app-id="org.gnome.Photos"
+    open-floating true
+    opacity 1.0
+}
+
+// steam 好友列表
+window-rule {
+    match app-id="steam" title="Friends List"
+    match app-id="steam" title="好友列表"
+    default-column-width { proportion 0.20; }
+}
+
+// QQ 资料卡 / 天气窗口不抢占焦点
+window-rule {
+    match app-id="QQ" title="资料卡"
+    match app-id="QQ" title="天气"
+    open-focused false
+}
+
+// QQ 群聊的聊天记录以浮动模式打开
+window-rule {
+    match app-id="QQ" title="群聊的聊天记录"
+    open-floating true
+}
+
+// imv 轻量图片查看器
+window-rule {
+    match app-id="imv"
+    open-floating true
+}
+
+// Ente-Auth 适配
+window-rule {
+    match app-id="io.ente.auth"
+    open-floating true
+    default-column-width { fixed 532; }
+    default-window-height { fixed 925; }
+}
+
+// Mission Center 系统监视器
+window-rule {
+    match app-id="io.missioncenter.MissionCenter"
+    open-floating true
+    default-column-width { proportion 0.65; }
+    default-window-height { proportion 0.70; }
+}
+
+// ==========================================
+// Scratchpad 终端 (Super+~ toggle)
+// ==========================================
+window-rule {
+    match app-id=r"^scratchpad$"
+    open-floating true
+
+    // ── 位置配置 ──
+    // 取消注释你想要的位置，同时注释掉其他选项。
+    // 如果选择正中央，请注释掉所有 default-floating-position 行。
+    //
+    // 上排：
+    default-floating-position x=0 y=40 relative-to="top"          // ← 当前：中上方
+    // default-floating-position x=40 y=40 relative-to="top-left"  // 左上方
+    // default-floating-position x=40 y=40 relative-to="top-right" // 右上方
+    //
+    // 中排：
+    // default-floating-position x=0 y=0 relative-to="left"        // 左中
+    // (注释掉所有 default-floating-position 行 = 正中央)
+    // default-floating-position x=0 y=0 relative-to="right"       // 右中
+    //
+    // 下排：
+    // default-floating-position x=40 y=40 relative-to="bottom-left"   // 左下方
+    // default-floating-position x=0 y=40 relative-to="bottom"         // 中下方
+    // default-floating-position x=40 y=40 relative-to="bottom-right"  // 右下方
+
+    // ── 尺寸配置 ──
+    default-column-width { proportion 0.5; }
+    default-window-height { proportion 0.45; }
+}

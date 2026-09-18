@@ -1,0 +1,8 @@
+.ssh/
+*.key
+*.pem
+*.secret
+*.token
+*credentials*
+*credential*
+.cache/
