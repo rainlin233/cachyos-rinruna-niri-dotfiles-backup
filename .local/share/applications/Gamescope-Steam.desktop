@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Gamescope-Steam
+Comment=Launch Steam Big-Picture-Mode inside Gamescope
+Exec=gamescope -w 1920 -h 1080 -r 60 -f -e --force-grab-cursor  -- steam -gamepadui
+Icon=steam
+Categories=Game;
+Terminal=false

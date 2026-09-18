@@ -1,0 +1,27 @@
+[Desktop Entry]
+# 应用程序类型（固定为 Application）
+Type=Application
+
+# 应用程序名称（应用菜单中显示的名称）
+Name=HMCL
+
+# 鼠标悬停时显示的提示文本（可选）
+Comment=Hello Minecraft! Launcher
+
+# 启动命令（如果不在 $PATH 中，建议填写完整绝对路径）
+Exec=sh -c 'latest=$(ls -1 /home/rinneko/games/Minecraft/HMCL-*.sh | sort -V | tail -n 1) && [ -n "$latest" ] && exec sh "$latest" "$@"' -- %U
+
+# 启动目录（可选，程序运行时的当前工作目录）
+Path=/home/rinneko/games/Minecraft
+
+# 指定应用程序图标（支持图标名称或绝对路径）
+Icon=/home/rinneko/games/Minecraft/hmcl.png
+
+# 是否在终端窗口中运行（GUI 程序填 false，CLI 命令行程序填 true）
+Terminal=false
+
+# 应用分类（决定在菜单中的归类，用分号隔开）
+Categories=Game;
+
+# 搜索关键词（可选，方便在启动器中模糊搜索）
+Keywords=hmcl;mc;minecraft;

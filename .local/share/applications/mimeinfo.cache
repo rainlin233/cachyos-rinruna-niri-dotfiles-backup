@@ -1,0 +1,24 @@
+[MIME Cache]
+application/x-httpd-php3=micro.desktop;
+application/x-httpd-php4=micro.desktop;
+application/x-httpd-php5=micro.desktop;
+application/x-php=micro.desktop;
+application/xml=micro.desktop;
+text/css=micro.desktop;
+text/html=micro.desktop;
+text/plain=micro.desktop;
+text/x-c++hdr=micro.desktop;
+text/x-c++src=micro.desktop;
+text/x-chdr=micro.desktop;
+text/x-csrc=micro.desktop;
+text/x-diff=micro.desktop;
+text/x-dsrc=micro.desktop;
+text/x-java=micro.desktop;
+text/x-pascal=micro.desktop;
+text/x-perl=micro.desktop;
+text/x-python=micro.desktop;
+text/x-sql=micro.desktop;
+x-scheme-handler/clash=clash-verge-handler.desktop;
+x-scheme-handler/clash-verge=clash-verge-handler.desktop;
+x-scheme-handler/steam=steam.desktop;
+x-scheme-handler/steamlink=steam.desktop;
