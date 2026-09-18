@@ -9,7 +9,7 @@
 #   - ALWAYS edit the HOME copy (system folders). The repo is a read-only mirror;
 #     anything edited directly in the repo gets overwritten by the next sync.
 #   - Full-sync trees (rsync, deletions propagate): .config/niri .config/fish
-#     .config/noctalia .config/fastfetch .local/share/applications
+#     .config/noctalia .config/fastfetch .local/share/applications .local/share/icons
 #   - Whitelist mode (git-tracked files only): .local/bin (deletions propagate),
 #     /etc/udev/rules.d (never auto-delete repo copies)
 #   - Excluded from sync: niri effects.kdl (eyecare mode-pointer symlink),
@@ -22,7 +22,7 @@ LOG="$STATE_DIR/sync.log"
 LOCK="$STATE_DIR/lock"
 QUIET_SECS=10
 
-FULL_DIRS=(.config/niri .config/fish .config/noctalia .config/fastfetch .local/share/applications)
+FULL_DIRS=(.config/niri .config/fish .config/noctalia .config/fastfetch .local/share/applications .local/share/icons)
 SINGLE_FILES=(.config/starship.toml)
 export GIT_SSH_COMMAND="ssh -o BatchMode=yes -o ConnectTimeout=15"
 
@@ -39,7 +39,7 @@ sync_tree() { # $1 = repo-relative dir, synced $HOME/<dir> -> $REPO/<dir>
     local src="$HOME/$rel" dst="$REPO/$rel"
     [ -d "$src" ] || { log "skip missing dir: $src"; return 0; }
     mkdir -p "$dst"
-    local -a x=(--exclude='*~' --exclude='*.swp' --exclude='*.swo')
+    local -a x=(--exclude='*~' --exclude='*.swp' --exclude='*.swo' --exclude='icon-theme.cache')
     case "$rel" in
         .config/niri) x+=(--exclude='/effects.kdl') ;;
         .config/fish) x+=(--exclude='/fish_variables*') ;;
@@ -118,6 +118,7 @@ daemon() {
     local p
     for p in "$HOME/.config/niri" "$HOME/.config/fish" "$HOME/.config/noctalia" \
              "$HOME/.config/fastfetch" "$HOME/.local/share/applications" \
+             "$HOME/.local/share/icons" \
              "$HOME/.config/starship.toml" /etc/udev/rules.d "$HOME/.local/bin"; do
         if [ -e "$p" ]; then watch+=("$p"); else log "watch skipped (missing): $p"; fi
     done
