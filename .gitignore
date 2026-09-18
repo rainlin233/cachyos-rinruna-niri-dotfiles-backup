@@ -6,3 +6,6 @@
 *credentials*
 *credential*
 .cache/
+
+# dotfiles-sync: volatile runtime state, excluded from auto-sync
+.config/fish/fish_variables*
