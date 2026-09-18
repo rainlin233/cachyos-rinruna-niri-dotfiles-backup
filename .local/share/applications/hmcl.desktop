@@ -11,8 +11,8 @@ Comment=Hello Minecraft! Launcher
 # 启动命令（如果不在 $PATH 中，建议填写完整绝对路径）
 Exec=sh -c 'latest=$(ls -1 ~/games/Minecraft/HMCL-*.sh | sort -V | tail -n 1) && [ -n "$latest" ] && exec sh "$latest" "$@"' -- %U
 
-# 指定应用程序图标（支持图标名称或绝对路径）
-Icon=/home/rinneko/games/Minecraft/hmcl.png
+# 指定应用程序图标（图标主题中的名称，无需写路径）
+Icon=hmcl
 
 # 是否在终端窗口中运行（GUI 程序填 false，CLI 命令行程序填 true）
 Terminal=false
