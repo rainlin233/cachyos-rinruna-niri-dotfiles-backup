@@ -17,7 +17,7 @@ layout {
     default-column-width { proportion 0.5; }
     focus-ring {
         width 2
-        active-color "#84d0f3"
+        active-color "#bcc5f0"
         inactive-color "transparent"
         urgent-color "#ffb4ab"
     }
@@ -27,15 +27,15 @@ layout {
         spread 6
         offset x=0 y=0
         draw-behind-window false
-        color "#84d0f395"
+        color "#bcc5f095"
         inactive-color "#00000045"
     }
     tab-indicator {
-        active-color "#84d0f3"
-        inactive-color "#4a9aba"
+        active-color "#bcc5f0"
+        inactive-color "#4a5378"
         urgent-color "#ffb4ab"
     }
     insert-hint {
-        color "#84d0f380"
+        color "#bcc5f080"
     }
 }
